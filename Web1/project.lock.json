@@ -10,6 +10,9 @@
       "jQuery/1.6.4": {
         "type": "package"
       },
+      "js-cookie/2.1.0": {
+        "type": "package"
+      },
       "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
         "type": "package",
         "dependencies": {
@@ -1772,6 +1775,9 @@
         "framework": ".NETFramework,Version=v4.5.1"
       },
       "jQuery/1.6.4": {
+        "type": "package"
+      },
+      "js-cookie/2.1.0": {
         "type": "package"
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
@@ -3539,6 +3545,9 @@
         "framework": ".NETFramework,Version=v4.5.1"
       },
       "jQuery/1.6.4": {
+        "type": "package"
+      },
+      "js-cookie/2.1.0": {
         "type": "package"
       },
       "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
@@ -5323,6 +5332,16 @@
         "Tools/install.ps1",
         "Tools/jquery-1.6.4-vsdoc-para.js",
         "Tools/uninstall.ps1"
+      ]
+    },
+    "js-cookie/2.1.0": {
+      "type": "package",
+      "sha512": "/JHcuUocEZRpFEog1luFTE2U32R/IEuIQNfZvNIjuiQqvM6YwbNjsakld+X0GxkTzmy0t7zVc7nfuCUVIKjiNQ==",
+      "files": [
+        "content/Scripts/js-cookie/js.cookie.js",
+        "js-cookie.2.1.0.nupkg",
+        "js-cookie.2.1.0.nupkg.sha512",
+        "js-cookie.nuspec"
       ]
     },
     "Microsoft.AspNet.Antiforgery/1.0.0-rc1-final": {
@@ -7316,6 +7335,7 @@
   },
   "projectFileDependencyGroups": {
     "": [
+      "js-cookie >= 2.1.0",
       "Microsoft.AspNet.IISPlatformHandler >= 1.0.0-rc1-final",
       "Microsoft.AspNet.Mvc >= 6.0.0-rc1-final",
       "Microsoft.AspNet.Server.Kestrel >= 1.0.0-rc1-final",

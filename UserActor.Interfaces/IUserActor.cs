@@ -15,5 +15,7 @@ namespace UserActor.Interfaces {
 
       Task SetCountAsync(int count);
       Task<int> TestMyActor(int num);
+      Task KillUser();
+      Task ExecKeyPress(int key_pressed);
    }
 }
