@@ -24,7 +24,7 @@
    </CodePackage>
    <Resources>
       <Endpoints>
-         <Endpoint Name="Web1TypeEndpoint" Protocol="http" Type="Input" Port="33300" />
+         <Endpoint Name="Web1TypeEndpoint" Protocol="http" Type="Input" Port="8505" />
       </Endpoints>
    </Resources>
 </ServiceManifest>

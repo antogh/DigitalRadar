@@ -58,7 +58,7 @@
          var username = document.getElementById("curUser").value;
          var urladd = "http://" + window.location.host + API_OFFSET + username;
          jQuery.get(urladd, function (data) {
-            //$('#servermsglist').append("from webapi: " + data + "\n");
+            var get_result = "from webapi: " + data + "\n";
          });
          var users_params = username.split(" ");
          if ((users_params.length > 1) && (users_params[0] == "kill"))

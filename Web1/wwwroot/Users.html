@@ -41,7 +41,8 @@
       <br />
    </p>
    <div class="auto-style1">
-      This is is the list of currently logged users with their status refreshed in real time.
+      This is is the list of currently logged users with their status refreshed in real time.<br />
+      Current node: <content id="curNode">...</content>
    </div>
    <p>
       &nbsp;
@@ -82,31 +83,12 @@
             var cur_user = window.name;
             var get_result;
 
-            document.addEventListener("keydown", function (e) {
-               var urladd = "http://" + window.location.host + API_OFFSET + "keyPressed/" + cur_user + '/' + e.keyCode + '/' + $.now();
-               jQuery.get(urladd, function (data) {
-                  get_result = "first success " + data;
-               });
-            });
-
             var connection = $.hubConnection();
+            connection.transportConnectTimeout = 3000;
+            connection.logging = true;
             var sighub = connection.createHubProxy("sigrHub");
 
-            sighub.on("broadcastMessage", function (username, seconds, key_pressed) {
-               // Add the message to the page.
-               var tagname = '#' + username;
-               if ((seconds >= 0) && ($(tagname).length <= 0))   {
-                  var newuser_row = "<tr id='" + username + "'></tr>";
-                  $('#mytbody').append(newuser_row);
-               }
-               if (seconds >= 0)
-                  $(tagname).html(BuildUserRow(username, cur_user, seconds, key_pressed));
-               else if ($(tagname).length > 0)
-                  $(tagname).html("");
-            });
-
-
-            connection.start() 
+            connection.start()
                 .done(function () {
                    $('#servermsglist').append('Now connected, connection ID=' + connection.id);
                 })
@@ -115,11 +97,43 @@
                 });
 
 
-            function BuildUserRow(username, cur_user, seconds, key_pressed) {
+            if (cur_user == null || cur_user === "") {
+               cur_user = "Admin";
+               var urladd = "http://" + window.location.host + API_OFFSET + cur_user;
+               jQuery.get(urladd, function (data) {
+                  var get_result = "from webapi: " + data + "\n";
+               });
+            }
+            document.addEventListener("keydown", function (e) {
+               var urladd = "http://" + window.location.host + API_OFFSET + "keyPressed/" + cur_user + '/' + e.keyCode + '/' + $.now();
+               jQuery.get(urladd, function (data) {
+                  get_result = data;
+                  $('#curNode').html(data);
+               });
+            });
+
+
+            sighub.on("broadcastMessage", function (username, seconds, key_pressed, cur_node) {
+               // Add the message to the page.
+               var tagname = '#' + username;
+               if ((seconds >= 0) && ($(tagname).length <= 0))   {
+                  var newuser_row = "<tr id='" + username + "'></tr>";
+                  $('#mytbody').append(newuser_row);
+               }
+               if (seconds >= 0)
+                  $(tagname).html(BuildUserRow(username, cur_user, seconds, key_pressed, cur_node));
+               else if ($(tagname).length > 0)
+                  $(tagname).html("");
+            });
+
+
+
+
+            function BuildUserRow(username, cur_user, seconds, key_pressed, cur_node) {
                var newuser_row = "";
-               var note_text = "";
+               var note_text = cur_node;
                if (cur_user == username)
-                  note_text = "YOU";
+                  note_text += " (YOU)";
                newuser_row = "<td>" + username + "</td> <td>" +
                   BuildUserStatusMessage(seconds) + "</td> <td>" + key_pressed + " -> '"  + String.fromCharCode(key_pressed) + "'</td> <td>" + note_text + "</td>";
                return newuser_row

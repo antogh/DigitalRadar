@@ -15,6 +15,9 @@
                                     StoreLocation="CurrentUser"
                                     StoreName="My" />
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="Please specify a connection endpoint." />
+  <ClusterConnectionParameters ConnectionEndpoint="mytestcluster.westeurope.cloudapp.azure.com:19000" />
   <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
+  <UpgradeDeployment Mode="Monitored" Enabled="false">
+    <Parameters FailureAction="Rollback" Force="True" ForceRestart="True" />
+  </UpgradeDeployment>
 </PublishProfile>

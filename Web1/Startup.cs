@@ -43,9 +43,9 @@ namespace Web1
 
             app.UseMvc();
             app.UseSignalR();
-        }
+      }
 
-        // Entry point for the application.
-        public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+      // Entry point for the application.
+      public static void Main(string[] args) => WebApplication.Run<Startup>(args);
     }
 }

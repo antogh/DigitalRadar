@@ -14,8 +14,9 @@ namespace UserActor.Interfaces {
       Task<int> GetCountAsync();
 
       Task SetCountAsync(int count);
-      Task<int> TestMyActor(int num);
+      //Task<int> TestMyActor(int num);
       Task KillUser();
       Task ExecKeyPress(int key_pressed);
+      Task<bool> InitUserActor(int frontend_port);
    }
 }

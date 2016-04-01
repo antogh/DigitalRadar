@@ -10,7 +10,7 @@ namespace Web1
     {
       public void Send(string message) {
         // Call the broadcastMessage method to update clients.
-        Clients.All.broadcastMessage(message, 0);
+        Clients.All.broadcastMessage(message, 0, 0, string.Empty);
       }
     }
 }

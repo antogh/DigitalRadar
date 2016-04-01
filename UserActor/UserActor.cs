@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Fabric;
 
 using Common;
 
@@ -32,6 +33,8 @@ namespace UserActor {
          public DateTime activation_time { get; set; }
          [DataMember]
          public int key_pressed { get; set; }
+         [DataMember]
+         public int frontend_port { get; set; }
 
          public override string ToString() {
             return string.Format(CultureInfo.InvariantCulture, "UserActor.ActorState[Count = {0} activation time = {1}]", Count, activation_time);
@@ -52,7 +55,8 @@ namespace UserActor {
          if (this.State == null) {
             // This is the first time this actor has ever been activated.
             // Set the actor's initial state values.
-            this.State = new ActorState { Count = 0, activation_time = DateTime.Now , key_pressed = 0};
+            this.State = new ActorState { Count = 0, activation_time = DateTime.Now , key_pressed = 0,
+                                          frontend_port =common_const.FRONTEND_PORT};
          }
 
          ActorEventSource.Current.ActorMessage(this, "State initialized to {0}", this.State);
@@ -78,49 +82,77 @@ namespace UserActor {
 
 
       private void BroadcastMessage(int key_pressed) {
+         int      cont, num_target_nodes = 1;
+         string   cur_address;
+         bool     node_is_up;
+
+         FabricClient fcli = new FabricClient();
+         FabricClient.QueryClient qcli =  fcli.QueryManager;
+         System.Fabric.Query.NodeList nl = qcli.GetNodeListAsync().Result;
+         System.Fabric.Query.Node cnd;
+         for (cont = 0; cont < nl.Count; cont++) {
+            cnd = nl[cont];
+            cur_address = cnd.IpAddressOrFQDN;
+            if (cur_address.ToLower() != common_const.LOCAL_NODE_ADDRESS) 
+               num_target_nodes = nl.Count;
+         }
+
          string responseString, req_uri;
          TimeSpan sec_life = DateTime.Now - this.State.activation_time;
          int spent_seconds = (key_pressed == -1) ? -1 : (int) sec_life.TotalSeconds;
-         req_uri = string.Format(@"http://localhost:{0}/{1}/{2}/{3}/{4}", common_const.webapi_port, common_const.API_OFFSET, this.Id, spent_seconds, key_pressed);
-         HttpWebRequest request = (HttpWebRequest)WebRequest.Create(req_uri);
-         request.Method = "GET";
-
-         // Make the request and get the response.
-         try {
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
-               using (StreamReader streamReader = new StreamReader(response.GetResponseStream(), true)) {
-                  // Capture the response string.
-                  responseString = streamReader.ReadToEnd();
+         for (cont = 0; cont < num_target_nodes; cont++) {
+            if (num_target_nodes == 1) {
+               cur_address = common_const.LOCAL_NODE_ADDRESS;
+               node_is_up = true;
+            }
+            else {
+               cnd = nl[cont];
+               cur_address = cnd.IpAddressOrFQDN;
+               node_is_up = cnd.NodeStatus == System.Fabric.Query.NodeStatus.Up;
+            }
+            if (node_is_up) {
+               req_uri = string.Format(@"http://{0}:{1}/{2}/{3}/{4}/{5}", cur_address, this.State.frontend_port, common_const.API_OFFSET, this.Id, spent_seconds, key_pressed);
+               HttpWebRequest request = (HttpWebRequest)WebRequest.Create(req_uri);
+               request.Method = "GET";
+               // Make the request and get the response.
+               ActorEventSource.Current.ActorMessage(this, "Trying to execute broadcast message webapi request. Uri = {0}", req_uri);
+               try {
+                  using (HttpWebResponse response = (HttpWebResponse)request.GetResponse()) {
+                     using (StreamReader streamReader = new StreamReader(response.GetResponseStream(), true)) {
+                        // Capture the response string.
+                        responseString = streamReader.ReadToEnd();
+                     }
+                  }
+               }
+               catch (WebException e) {
+                  // If there is a web exception, display the error message.
+                  ActorEventSource.Current.ActorMessage(this, "Error while executing broadcast message webapi request: {0}", e.Message);
+                  if (e.InnerException != null)
+                     ActorEventSource.Current.ActorMessage(this, e.InnerException.Message);
+               }
+               catch (Exception e) {
+                  // If there is another kind of exception, throw it.
+                  throw (e);
                }
             }
          }
-         catch (WebException e) {
-            // If there is a web exception, display the error message.
-            Console.WriteLine("Error getting the list of system services:");
-            Console.WriteLine(e.Message);
-            if (e.InnerException != null)
-               Console.WriteLine(e.InnerException.Message);
-            return;
-         }
-         catch (Exception e) {
-            // If there is another kind of exception, throw it.
-            throw (e);
-         }
+         fcli.Dispose();
       }
 
       /*
       private void SendHeartBeat() {
          BroadcastMessage(this.State.key_pressed);
       }
-      */ 
+      */
 
-
+      /*
       [Readonly]
       public Task<int> TestMyActor(int num) {
          IActorReminder myrem = RegisterReminderAsync(UserActorConst.heartbit_reminder_name, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10), ActorReminderAttributes.Readonly).Result;
          ActorEventSource.Current.ActorMessage(this, "Registered reminder {0}", UserActorConst.heartbit_reminder_name);
          return Task.FromResult(num + 1);
       }
+      */
 
       [Readonly]
       public Task KillUser() {
@@ -145,6 +177,12 @@ namespace UserActor {
          return Task.FromResult(true);
       }
 
+      public Task<bool> InitUserActor(int frontend_port) {
+         this.State.frontend_port = frontend_port;
+         IActorReminder myrem = RegisterReminderAsync(UserActorConst.heartbit_reminder_name, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(10), ActorReminderAttributes.Readonly).Result;
+         ActorEventSource.Current.ActorMessage(this, "Registered reminder {0}", UserActorConst.heartbit_reminder_name);
+         return Task.FromResult(true);
+      }
 
       [Readonly]
       Task<int> IUserActor.GetCountAsync() {
