@@ -7,9 +7,6 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1"
       },
-      "jQuery/1.6.4": {
-        "type": "package"
-      },
       "js-cookie/2.1.0": {
         "type": "package"
       },
@@ -780,53 +777,6 @@
           "lib/dnx451/Microsoft.AspNet.Server.WebListener.dll": {}
         }
       },
-      "Microsoft.AspNet.SignalR.JS/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "jQuery": "1.6.4"
-        }
-      },
-      "Microsoft.AspNet.SignalR.Messaging/3.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-          "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll": {}
-        }
-      },
-      "Microsoft.AspNet.SignalR.Server/3.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNet.DataProtection": "1.0.0-rc1-final",
-          "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
-          "Microsoft.AspNet.SignalR.Messaging": "3.0.0-rc1-final",
-          "Newtonsoft.Json": "6.0.6"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll": {}
-        }
-      },
       "Microsoft.AspNet.StaticFiles/1.0.0-rc1-final": {
         "type": "package",
         "dependencies": {
@@ -847,6 +797,40 @@
         },
         "runtime": {
           "lib/net451/Microsoft.AspNet.StaticFiles.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebSockets.Protocol/1.0.0-rc1-final": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll": {}
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebSockets.Server/1.0.0-rc1-final": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
+          "Microsoft.AspNet.WebSockets.Protocol": "1.0.0-rc1-final"
+        },
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Server.dll": {}
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Server.dll": {}
         }
       },
       "Microsoft.AspNet.WebUtilities/1.0.0-rc1-final": {
@@ -1774,9 +1758,6 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1"
       },
-      "jQuery/1.6.4": {
-        "type": "package"
-      },
       "js-cookie/2.1.0": {
         "type": "package"
       },
@@ -2550,53 +2531,6 @@
           "lib/dnx451/Microsoft.AspNet.Server.WebListener.dll": {}
         }
       },
-      "Microsoft.AspNet.SignalR.JS/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "jQuery": "1.6.4"
-        }
-      },
-      "Microsoft.AspNet.SignalR.Messaging/3.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-          "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll": {}
-        }
-      },
-      "Microsoft.AspNet.SignalR.Server/3.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNet.DataProtection": "1.0.0-rc1-final",
-          "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
-          "Microsoft.AspNet.SignalR.Messaging": "3.0.0-rc1-final",
-          "Newtonsoft.Json": "6.0.6"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll": {}
-        }
-      },
       "Microsoft.AspNet.StaticFiles/1.0.0-rc1-final": {
         "type": "package",
         "dependencies": {
@@ -2617,6 +2551,40 @@
         },
         "runtime": {
           "lib/net451/Microsoft.AspNet.StaticFiles.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebSockets.Protocol/1.0.0-rc1-final": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll": {}
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebSockets.Server/1.0.0-rc1-final": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
+          "Microsoft.AspNet.WebSockets.Protocol": "1.0.0-rc1-final"
+        },
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Server.dll": {}
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Server.dll": {}
         }
       },
       "Microsoft.AspNet.WebUtilities/1.0.0-rc1-final": {
@@ -3544,9 +3512,6 @@
         "type": "project",
         "framework": ".NETFramework,Version=v4.5.1"
       },
-      "jQuery/1.6.4": {
-        "type": "package"
-      },
       "js-cookie/2.1.0": {
         "type": "package"
       },
@@ -4320,53 +4285,6 @@
           "lib/dnx451/Microsoft.AspNet.Server.WebListener.dll": {}
         }
       },
-      "Microsoft.AspNet.SignalR.JS/2.2.0": {
-        "type": "package",
-        "dependencies": {
-          "jQuery": "1.6.4"
-        }
-      },
-      "Microsoft.AspNet.SignalR.Messaging/3.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
-          "Microsoft.Extensions.OptionsModel": "1.0.0-rc1-final"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll": {}
-        }
-      },
-      "Microsoft.AspNet.SignalR.Server/3.0.0-rc1-final": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNet.DataProtection": "1.0.0-rc1-final",
-          "Microsoft.AspNet.Hosting.Abstractions": "1.0.0-rc1-final",
-          "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
-          "Microsoft.AspNet.SignalR.Messaging": "3.0.0-rc1-final",
-          "Newtonsoft.Json": "6.0.6"
-        },
-        "frameworkAssemblies": [
-          "Microsoft.CSharp",
-          "mscorlib",
-          "System",
-          "System.Core"
-        ],
-        "compile": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll": {}
-        },
-        "runtime": {
-          "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll": {}
-        }
-      },
       "Microsoft.AspNet.StaticFiles/1.0.0-rc1-final": {
         "type": "package",
         "dependencies": {
@@ -4387,6 +4305,40 @@
         },
         "runtime": {
           "lib/net451/Microsoft.AspNet.StaticFiles.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebSockets.Protocol/1.0.0-rc1-final": {
+        "type": "package",
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll": {}
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll": {}
+        }
+      },
+      "Microsoft.AspNet.WebSockets.Server/1.0.0-rc1-final": {
+        "type": "package",
+        "dependencies": {
+          "Microsoft.AspNet.Http.Extensions": "1.0.0-rc1-final",
+          "Microsoft.AspNet.WebSockets.Protocol": "1.0.0-rc1-final"
+        },
+        "frameworkAssemblies": [
+          "Microsoft.CSharp",
+          "mscorlib",
+          "System",
+          "System.Core"
+        ],
+        "compile": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Server.dll": {}
+        },
+        "runtime": {
+          "lib/net451/Microsoft.AspNet.WebSockets.Server.dll": {}
         }
       },
       "Microsoft.AspNet.WebUtilities/1.0.0-rc1-final": {
@@ -5319,21 +5271,6 @@
       "type": "project",
       "path": "../wrap/UserActor.Interfaces/project.json"
     },
-    "jQuery/1.6.4": {
-      "type": "package",
-      "sha512": "8RzoZQFeFYL/cINRXksLWyl8D5TKctZ/2G8hrlOLLM5OgFNI9h3t3l5tB+BBbsBUxaPUageVe0p9ruU5jrFeow==",
-      "files": [
-        "Content/Scripts/jquery-1.6.4.js",
-        "Content/Scripts/jquery-1.6.4.min.js",
-        "Content/Scripts/jquery-1.6.4-vsdoc.js",
-        "jQuery.1.6.4.nupkg",
-        "jQuery.1.6.4.nupkg.sha512",
-        "jQuery.nuspec",
-        "Tools/install.ps1",
-        "Tools/jquery-1.6.4-vsdoc-para.js",
-        "Tools/uninstall.ps1"
-      ]
-    },
     "js-cookie/2.1.0": {
       "type": "package",
       "sha512": "/JHcuUocEZRpFEog1luFTE2U32R/IEuIQNfZvNIjuiQqvM6YwbNjsakld+X0GxkTzmy0t7zVc7nfuCUVIKjiNQ==",
@@ -5892,45 +5829,6 @@
         "Microsoft.AspNet.Server.WebListener.nuspec"
       ]
     },
-    "Microsoft.AspNet.SignalR.JS/2.2.0": {
-      "type": "package",
-      "sha512": "VjALldAdg3AiBPSmP9HUmqFTOQVRhl/jZI9Sq5AZAEbiPPfDK1FRjqtVia35OXyC+wGW2n20M5QNRKFuflSUsA==",
-      "files": [
-        "content/Scripts/jquery.signalR-2.2.0.js",
-        "content/Scripts/jquery.signalR-2.2.0.min.js",
-        "Microsoft.AspNet.SignalR.JS.2.2.0.nupkg",
-        "Microsoft.AspNet.SignalR.JS.2.2.0.nupkg.sha512",
-        "Microsoft.AspNet.SignalR.JS.nuspec"
-      ]
-    },
-    "Microsoft.AspNet.SignalR.Messaging/3.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "BhKeGkpotHrV7u3ZGKPdCvP/h7QgmMUF5pEhwqUmWPHqp7v9aCHHPm392EcPn+1BlXisnuHf+2tgfp3a4jStvQ==",
-      "files": [
-        "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.dll",
-        "lib/dnx451/Microsoft.AspNet.SignalR.Messaging.xml",
-        "lib/dnxcore50/Microsoft.AspNet.SignalR.Messaging.dll",
-        "lib/dnxcore50/Microsoft.AspNet.SignalR.Messaging.xml",
-        "Microsoft.AspNet.SignalR.Messaging.3.0.0-rc1-final.nupkg",
-        "Microsoft.AspNet.SignalR.Messaging.3.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.AspNet.SignalR.Messaging.nuspec"
-      ]
-    },
-    "Microsoft.AspNet.SignalR.Server/3.0.0-rc1-final": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "R6XfG3qvc9drsfIpnK/cRHaYkH+MIOdZsK+O7n1JTa13ztetUBOxLQ8F2Wl9/j4H1Ttg+xsiIFhbgML9729t7A==",
-      "files": [
-        "lib/dnx451/Microsoft.AspNet.SignalR.Server.dll",
-        "lib/dnx451/Microsoft.AspNet.SignalR.Server.xml",
-        "lib/dnxcore50/Microsoft.AspNet.SignalR.Server.dll",
-        "lib/dnxcore50/Microsoft.AspNet.SignalR.Server.xml",
-        "Microsoft.AspNet.SignalR.Server.3.0.0-rc1-final.nupkg",
-        "Microsoft.AspNet.SignalR.Server.3.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.AspNet.SignalR.Server.nuspec"
-      ]
-    },
     "Microsoft.AspNet.StaticFiles/1.0.0-rc1-final": {
       "type": "package",
       "serviceable": true,
@@ -5943,6 +5841,34 @@
         "Microsoft.AspNet.StaticFiles.1.0.0-rc1-final.nupkg",
         "Microsoft.AspNet.StaticFiles.1.0.0-rc1-final.nupkg.sha512",
         "Microsoft.AspNet.StaticFiles.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebSockets.Protocol/1.0.0-rc1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "dc/e2uVh/J9dQ9DuXh0hlTSS5lID2Kr+O+EFgf9NgrvP1sFS8EWDGHoUv9RS/owVfFtd956bnRjMX2jD/5NBPA==",
+      "files": [
+        "lib/dotnet5.4/Microsoft.AspNet.WebSockets.Protocol.dll",
+        "lib/dotnet5.4/Microsoft.AspNet.WebSockets.Protocol.xml",
+        "lib/net451/Microsoft.AspNet.WebSockets.Protocol.dll",
+        "lib/net451/Microsoft.AspNet.WebSockets.Protocol.xml",
+        "Microsoft.AspNet.WebSockets.Protocol.1.0.0-rc1-final.nupkg",
+        "Microsoft.AspNet.WebSockets.Protocol.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.AspNet.WebSockets.Protocol.nuspec"
+      ]
+    },
+    "Microsoft.AspNet.WebSockets.Server/1.0.0-rc1-final": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "hVPS2eewqM8S5cpFK62+d10WCaPBQb9pnP3ahEYP/wMlycv0nAmsQ5sMeaI06zI12cZTAXWnwf3aUgN7/2yuFA==",
+      "files": [
+        "lib/dotnet5.4/Microsoft.AspNet.WebSockets.Server.dll",
+        "lib/dotnet5.4/Microsoft.AspNet.WebSockets.Server.xml",
+        "lib/net451/Microsoft.AspNet.WebSockets.Server.dll",
+        "lib/net451/Microsoft.AspNet.WebSockets.Server.xml",
+        "Microsoft.AspNet.WebSockets.Server.1.0.0-rc1-final.nupkg",
+        "Microsoft.AspNet.WebSockets.Server.1.0.0-rc1-final.nupkg.sha512",
+        "Microsoft.AspNet.WebSockets.Server.nuspec"
       ]
     },
     "Microsoft.AspNet.WebUtilities/1.0.0-rc1-final": {
@@ -7339,9 +7265,8 @@
       "Microsoft.AspNet.IISPlatformHandler >= 1.0.0-rc1-final",
       "Microsoft.AspNet.Mvc >= 6.0.0-rc1-final",
       "Microsoft.AspNet.Server.Kestrel >= 1.0.0-rc1-final",
-      "Microsoft.AspNet.SignalR.JS >= 2.2.0",
-      "Microsoft.AspNet.SignalR.Server >= 3.0.0-rc1-final",
       "Microsoft.AspNet.StaticFiles >= 1.0.0-rc1-final",
+      "Microsoft.AspNet.WebSockets.Server >= 1.0.0-rc1-final",
       "Microsoft.Extensions.Configuration.FileProviderExtensions >= 1.0.0-rc1-final",
       "Microsoft.Extensions.Configuration.Json >= 1.0.0-rc1-final",
       "Microsoft.Extensions.Logging >= 1.0.0-rc1-final",

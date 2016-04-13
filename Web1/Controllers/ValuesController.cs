@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.SignalR;
 using System.Fabric;
 using System.Fabric.Description;
+using System.Net.WebSockets;
 using Common;
 
 using Microsoft.ServiceFabric.Actors;
 using UserActor.Interfaces;
+using System.Threading;
+using System.Text;
 
 namespace Web1.Controllers {
    [Route("api/[controller]")]
    public class ValuesController : Controller {
-      private IHubContext myhub;
 
-      public ValuesController(Microsoft.AspNet.SignalR.Infrastructure.IConnectionManager connectionManager) {
-         myhub = connectionManager.GetHubContext<SigrHub>();
+      private ConcurrentBag<WebSocket> _ws_collection;
+
+      public ValuesController(ConcurrentBag<WebSocket> ws_collection) {
+         _ws_collection = ws_collection;
       }
 
       // GET: api/values
@@ -41,7 +45,28 @@ namespace Web1.Controllers {
       // broadcast the message
       [HttpGet("{name}/{seconds}/{key_pressed}")]
       public bool Get(string name, int seconds, int key_pressed) {
-         myhub.Clients.All.broadcastMessage(name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+         //myhub.Clients.All.broadcastMessage(name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+         foreach (WebSocket cur_ws in _ws_collection) {
+            if (cur_ws.State == WebSocketState.Open) {
+               var token = CancellationToken.None;
+               var type = WebSocketMessageType.Text;
+               string message = string.Format("{0} {1} {2} {3}", name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+               var data = Encoding.UTF8.GetBytes(message);
+               var buffer = new ArraySegment<Byte>(data);
+               cur_ws.SendAsync(buffer, type, true, token);
+            }
+         }
+         /*
+         _ws_collection.Where(cur_ws => cur_ws.State == WebSocketState.Open).Select(cur_ws => {
+            var token = CancellationToken.None;
+            var type = WebSocketMessageType.Text;
+            string message = string.Format("{0} {1} {2} {3}", name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+            var data = Encoding.UTF8.GetBytes(message);
+            var buffer = new ArraySegment<Byte>(data);
+            cur_ws.SendAsync(buffer, type, true, token);
+            return cur_ws;
+         });
+         */
          return true;
       }
 
