@@ -15,7 +15,7 @@
                                     StoreLocation="CurrentUser"
                                     StoreName="My" />
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="party60775.westus.cloudapp.azure.com:19000" />
+  <ClusterConnectionParameters ConnectionEndpoint="party50677.westus.cloudapp.azure.com:19000" />
   <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
   <UpgradeDeployment Mode="Monitored" Enabled="false">
     <Parameters FailureAction="Rollback" Force="True" ForceRestart="True" />

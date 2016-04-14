@@ -7278,7 +7278,8 @@
     ],
     "DNX,Version=v4.5.1": [
       "Common >= 1.0.0-*",
-      "UserActor.Interfaces >= 1.0.0-*"
+      "UserActor.Interfaces >= 1.0.0-*",
+      "fx/System.Web.Extensions >= 4.0.0"
     ]
   }
 }

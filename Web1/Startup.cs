@@ -32,7 +32,7 @@ namespace Web1 {
       public void ConfigureServices(IServiceCollection services) {
          // Add framework services.
          services.AddMvc();
-         services.AddSingleton<ConcurrentBag<WebSocket>, ConcurrentBag<WebSocket>>();
+         services.AddSingleton<ConcurrentDictionary<string, WebSocket>, ConcurrentDictionary<string, WebSocket>>();
       }
 
       // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -50,21 +50,13 @@ namespace Web1 {
       public static void Main(string[] args) => WebApplication.Run<Startup>(args);
    }
 
-   /*
-   public class WebSocketCollection  {
-      public ConcurrentBag<WebSocket> _collection;
-
-      public WebSocketCollection() {
-         _collection = new ConcurrentBag<WebSocket>();
-      }
-   }
-   */
+ 
 
    public class MyWebSocketMiddleware {
       private readonly RequestDelegate _next;
-      private ConcurrentBag<WebSocket> _ws_collection;
+      private ConcurrentDictionary<string, WebSocket> _ws_collection;
 
-      public MyWebSocketMiddleware(RequestDelegate next, ConcurrentBag<WebSocket> ws_collection) {
+      public MyWebSocketMiddleware(RequestDelegate next, ConcurrentDictionary<string, WebSocket> ws_collection) {
          _next = next;
          _ws_collection = ws_collection;
       }
@@ -73,16 +65,13 @@ namespace Web1 {
          if (context.WebSockets.IsWebSocketRequest) {
             var webSocket = await context.WebSockets.AcceptWebSocketAsync();
             if ((webSocket != null) && (webSocket.State == WebSocketState.Open)) {
-               _ws_collection.Add(webSocket);
-               while (webSocket.State == WebSocketState.Open) {
-                  Thread.Sleep(100);
-                  /*
-                  var token = CancellationToken.None;
-                  var type = WebSocketMessageType.Text;
-                  var data = Encoding.UTF8.GetBytes("prova 0 32 localhost");
-                  var buffer = new ArraySegment<Byte>(data);
-                  await webSocket.SendAsync(buffer, type, true, token);
-                  */
+               string cur_ws_key = Guid.NewGuid().ToString();
+               bool ok_addedd = _ws_collection.TryAdd(cur_ws_key, webSocket);
+               if (ok_addedd) {
+                  while (webSocket.State == WebSocketState.Open) 
+                     Thread.Sleep(100);
+                  WebSocket removed_ws;
+                  bool ok_removed = _ws_collection.TryRemove(cur_ws_key, out removed_ws);
                }
             }
          }

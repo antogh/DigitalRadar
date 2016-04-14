@@ -77,7 +77,7 @@
 
       <script>
          $(function () {
-            var cur_user = window.name;
+            var cur_user = sessionStorage.getItem("username");
             var get_result;
 
             function initWebSocket() {
@@ -88,8 +88,8 @@
                };
                websocket.onmessage = function (args) {
                   get_result = "received message";
-                  var params = args.data.split(" ");
-                  action_on_received_message(params[0], params[1], params[2], params[3]);
+                  var params = JSON.parse(args.data);
+                  action_on_received_message(params.user_name, params.life_in_seconds, params.key_pressed, params.node_address);
                };
                websocket.onclose = function (args) {
                   setTimeout(initWebSocket, 500);
@@ -132,21 +132,6 @@
                });
             });
 
-
-            /*
-            sighub.on("broadcastMessage", function (username, seconds, key_pressed, cur_node) {
-               // Add the message to the page.
-               var tagname = '#' + username;
-               if ((seconds >= 0) && ($(tagname).length <= 0))   {
-                  var newuser_row = "<tr id='" + username + "'></tr>";
-                  $('#mytbody').append(newuser_row);
-               }
-               if (seconds >= 0)
-                  $(tagname).html(BuildUserRow(username, cur_user, seconds, key_pressed, cur_node));
-               else if ($(tagname).length > 0)
-                  $(tagname).html("");
-            });
-            */
 
 
 

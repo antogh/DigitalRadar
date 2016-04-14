@@ -7,6 +7,10 @@ using Microsoft.AspNet.Mvc;
 using System.Fabric;
 using System.Fabric.Description;
 using System.Net.WebSockets;
+
+using System.Web.Script.Serialization;
+
+
 using Common;
 
 using Microsoft.ServiceFabric.Actors;
@@ -15,12 +19,29 @@ using System.Threading;
 using System.Text;
 
 namespace Web1.Controllers {
+
+   class WebSocketData {
+
+      public WebSocketData(string pname, int pseconds, int pkey, string paddress) {
+         user_name = pname;
+         life_in_seconds = pseconds;
+         key_pressed = pkey;
+         node_address = paddress;
+      }
+
+
+      public string  user_name;
+      public int life_in_seconds;
+      public int key_pressed;
+      public string node_address;   
+   }
+
    [Route("api/[controller]")]
    public class ValuesController : Controller {
 
-      private ConcurrentBag<WebSocket> _ws_collection;
+      private ConcurrentDictionary<string, WebSocket> _ws_collection;
 
-      public ValuesController(ConcurrentBag<WebSocket> ws_collection) {
+      public ValuesController(ConcurrentDictionary<string, WebSocket> ws_collection) {
          _ws_collection = ws_collection;
       }
 
@@ -31,42 +52,23 @@ namespace Web1.Controllers {
       }
 
       
-      // GET api/values/name/seconds
-      // broadcast the message
-      /*
-      [HttpGet("{name}/{seconds}")]
-      public bool Get(string name, int seconds) {
-         myhub.Clients.All.broadcastMessage(name, seconds, 0);
-         return true;
-      }
-      */
 
       // GET api/values/name/seconds/key_pressed
       // broadcast the message
       [HttpGet("{name}/{seconds}/{key_pressed}")]
       public bool Get(string name, int seconds, int key_pressed) {
-         //myhub.Clients.All.broadcastMessage(name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
-         foreach (WebSocket cur_ws in _ws_collection) {
+         foreach (WebSocket cur_ws in _ws_collection.Values) {
             if (cur_ws.State == WebSocketState.Open) {
                var token = CancellationToken.None;
+               JavaScriptSerializer jser = new JavaScriptSerializer();
+               var wsdata = new WebSocketData(name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
                var type = WebSocketMessageType.Text;
-               string message = string.Format("{0} {1} {2} {3}", name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+               string message = jser.Serialize(wsdata);
                var data = Encoding.UTF8.GetBytes(message);
                var buffer = new ArraySegment<Byte>(data);
                cur_ws.SendAsync(buffer, type, true, token);
             }
          }
-         /*
-         _ws_collection.Where(cur_ws => cur_ws.State == WebSocketState.Open).Select(cur_ws => {
-            var token = CancellationToken.None;
-            var type = WebSocketMessageType.Text;
-            string message = string.Format("{0} {1} {2} {3}", name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
-            var data = Encoding.UTF8.GetBytes(message);
-            var buffer = new ArraySegment<Byte>(data);
-            cur_ws.SendAsync(buffer, type, true, token);
-            return cur_ws;
-         });
-         */
          return true;
       }
 
@@ -86,18 +88,8 @@ namespace Web1.Controllers {
       // login a new user
       [HttpGet("{login_name}")]
       public string Get(string login_name) {
-         int frontend_port = common_const.FRONTEND_PORT;
+         int frontend_port = Util.GetFrontendPort();
          bool init_actor_result = false;
-
-         CodePackageActivationContext ca = FabricRuntime.GetActivationContext();
-         try {
-            EndpointResourceDescription ep = ca.GetEndpoint(common_const.FRONTEND_ENDPOINT_NAME);
-            frontend_port = ep.Port;
-         }
-         catch (Exception e) {
-            string err_descr = e.Message;
-            frontend_port = common_const.FRONTEND_PORT;
-         }
          string username = "";
          bool kill_user = false;
          string[] login_params = login_name.Split(new char[] { ' ' });
