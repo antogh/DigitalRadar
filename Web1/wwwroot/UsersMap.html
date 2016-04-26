@@ -1,0 +1,216 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+   <title>Simple Map</title>
+   <script src="Scripts/Constants.js"></script>
+   <meta name="viewport" content="initial-scale=1.0">
+   <meta charset="utf-8">
+   <style>
+      html, body {
+         height: 100%;
+         margin: 0;
+         padding: 0;
+      }
+
+      #map {
+         height: 100%;
+      }
+
+      .gm-style-iw + div {
+         display: none;
+      }
+   </style>
+</head>
+<body>
+   <div id="map"></div>
+   <script>
+      var map;
+      var jumpMeters = DEFAULT_JUMP_METERS;
+      var inputDistance;
+      var logged_user;
+      var usersList;
+      //var login_userid = sessionStorage.getItem("username");
+      //var login_location = sessionStorage.getItem("location");
+      var login_userid = "User1";
+      var login_location = "Milano";
+
+      document.addEventListener("keydown", function (e) {
+         var movepos = [KEYCODE_LEFT, KEYCODE_RIGHT, KEYCODE_UP, KEYCODE_DOWN];
+         var jmpsize = [KEYCODE_PGUP, KEYCODE_PGDN];
+         if (movepos.indexOf(e.keyCode) > -1)
+            JumpPosition(e.keyCode);
+         if (jmpsize.indexOf(e.keyCode) > -1)
+            setJumpSize(e.keyCode);
+      });
+
+
+      function newCustomButton(baseBtn, baseTxt, newBtnText) {
+         var newBtn = document.createElement('div');
+         newBtn.style.cssText = baseBtn.style.cssText;
+         var newControlText = document.createElement('div');
+         newControlText.innerHTML = newBtnText;
+         newControlText.style.cssText = baseTxt.style.cssText;
+         newBtn.appendChild(newControlText);
+         return newBtn;
+      }
+
+
+      function JumpPosition(keyCode) {
+         var new_lat = logged_user.infowin.position.lat(), new_lng = logged_user.infowin.position.lng();
+         if (keyCode == KEYCODE_DOWN)
+            new_lat -= jumpMeters / 1000 * LAT_DEG_TO_KM;
+         else if (keyCode == KEYCODE_UP)
+            new_lat += jumpMeters / 1000 * LAT_DEG_TO_KM;
+         else if (keyCode == KEYCODE_RIGHT)
+            new_lng += jumpMeters / 1000 * LNG_DEG_TO_KM / cosDegrees(new_lat);
+         else if (keyCode == KEYCODE_LEFT)
+            new_lng -= jumpMeters / 1000 * LNG_DEG_TO_KM / cosDegrees(new_lat);
+         var new_coord = new google.maps.LatLng({ lat: new_lat, lng: new_lng }); 
+         google.maps.event.trigger(map, 'new_position', logged_user, new_coord);
+      }
+
+
+      function setJumpSize(keycode) {
+         if (keycode == KEYCODE_PGDN)
+            jumpMeters = inputDistance.value = myParse(inputDistance.value, MIN_JUMP_METERS, MAX_JUMP_METERS, DEFAULT_JUMP_METERS) / 2;
+         else if (keycode == KEYCODE_PGUP)
+            jumpMeters = inputDistance.value = myParse(inputDistance.value, MIN_JUMP_METERS, MAX_JUMP_METERS, DEFAULT_JUMP_METERS) * 2;
+      }
+
+      function SetupControlPanel() {
+         // Create the DIV to hold the control and call the CenterControl()
+         // constructor passing in this DIV.
+         var controlDiv = document.createElement('div');
+         var controlDiv2 = document.createElement('div');
+         var controlDiv3 = document.createElement('div');
+
+         // Set CSS for the control border.
+         var leftBtn = document.createElement('div');
+         leftBtn.style.backgroundColor = '#fff';
+         leftBtn.style.border = '1px solid #bbb';
+         leftBtn.style.borderRadius = '3px';
+         leftBtn.style.boxShadow = '0 0px 0px rgba(0,0,0,.3)';
+         leftBtn.style.cursor = 'pointer';
+         leftBtn.style.marginBottom = '0px';
+         leftBtn.style.textAlign = 'center';
+         leftBtn.style.display = 'inline-block';
+         leftBtn.style.width = '55px';
+         leftBtn.style.height = '50px';
+         // Set CSS for the control interior.
+         var leftBtnText = document.createElement('div');
+         leftBtnText.style.color = 'rgb(25,25,25)';
+         leftBtnText.style.fontFamily = 'Roboto,Arial,sans-serif';
+         leftBtnText.style.fontSize = '16px';
+         leftBtnText.style.lineHeight = '50px';
+         leftBtnText.style.paddingLeft = '5px';
+         leftBtnText.style.paddingRight = '5px';
+         leftBtnText.innerHTML = 'Left';
+         leftBtn.appendChild(leftBtnText);
+
+         var inputDescr = document.createElement('div');
+         inputDescr.innerHTML = 'Step (meters)';
+         inputDescr.style.display = 'inline-block';
+         inputDescr.style.verticalAlign = 'bottom';
+         inputDescr.style.textAlign = 'center';
+         inputDescr.style.backgroundColor = '#fff';
+         inputDescr.style.li
+         inputDistance = document.createElement('input');
+         inputDistance.style.display = 'block';
+         inputDistance.style.width = '80px';
+         inputDistance.style.height = '40px';
+         inputDistance.value = jumpMeters;
+         inputDescr.appendChild(inputDistance);
+
+         var rightBtn = newCustomButton(leftBtn, leftBtnText, 'Right');
+         var upBtn = newCustomButton(leftBtn, leftBtnText, 'Up');
+         var downBtn = newCustomButton(leftBtn, leftBtnText, 'Down');
+         upBtn.style.display = 'block';
+         var plusBtn = newCustomButton(leftBtn, leftBtnText, '+');
+         var minusBtn = newCustomButton(leftBtn, leftBtnText, '-');
+         plusBtn.style.height = '60px';
+         minusBtn.style.height = '60px';
+
+         controlDiv.appendChild(leftBtn);
+         controlDiv.appendChild(rightBtn);
+         controlDiv2.appendChild(upBtn);
+         controlDiv2.appendChild(downBtn);
+         controlDiv3.appendChild(plusBtn);
+         controlDiv3.appendChild(inputDescr);
+         controlDiv3.appendChild(minusBtn);
+
+         // Setup the click event listeners
+         leftBtn.addEventListener('click', function () {
+            JumpPosition(KEYCODE_LEFT);
+         });
+
+         rightBtn.addEventListener('click', function () {
+            JumpPosition(KEYCODE_RIGHT);
+         });
+
+         upBtn.addEventListener('click', function () {
+            JumpPosition(KEYCODE_UP);
+         });
+
+         downBtn.addEventListener('click', function () {
+            JumpPosition(KEYCODE_DOWN);
+         });
+
+         minusBtn.addEventListener('click', function () {
+            setJumpSize(KEYCODE_PGDN);
+         });
+
+         plusBtn.addEventListener('click', function () {
+            setJumpSize(KEYCODE_PGUP);
+         });
+
+         controlDiv.index = 1;
+         controlDiv2.index = 1;
+         controlDiv3.index = 1;
+         map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv);
+         map.controls[google.maps.ControlPosition.TOP_CENTER].push(controlDiv2);
+         map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(controlDiv3);
+      }
+
+
+      function openInfoWindow(caption, cur_coord) {
+         var infowindow = new google.maps.InfoWindow({
+            content: caption,
+            position: cur_coord
+         });
+         infowindow.open(map);
+         return infowindow;
+      }
+
+
+      function initMap() {
+         var center_coord = new google.maps.LatLng({ lat: 46.0036778, lng: 8.951052 }); // default on Lugano, CH
+         var geocoder = new google.maps.Geocoder();
+         var location = login_location;
+         geocoder.geocode({ 'address': location }, function (results, status) {
+            if (status == google.maps.GeocoderStatus.OK)
+               center_coord = results[0].geometry.location;
+            else
+               alert("Could not find location: " + location);
+            map = new google.maps.Map(document.getElementById('map'), {
+               center:  center_coord,
+               streetViewControl: false,
+               mapTypeControl: false,
+               zoom: 8
+            });
+            var infowindow = openInfoWindow(login_userid, center_coord);
+            logged_user = { userID: login_userid, infowin: infowindow }
+            usersList = [logged_user];
+            map.addListener('new_position', function (cur_user, new_coord) {
+               if (cur_user.infowin.getMap() == null)   // if infowin has been closed reopen it
+                  cur_user.infowin = openInfoWindow(cur_user.userID, new_coord);
+               else
+                  cur_user.infowin.setPosition(new_coord);
+            });
+            SetupControlPanel();
+         });
+      }
+   </script>
+   <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"
+           async defer></script>
+</body>
+</html>

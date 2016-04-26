@@ -19,54 +19,85 @@
             .auto-style3 {
                 font-size: large;
             }
+
+           .my_submit_button {
+              padding-top: 20px;
+           }
         </style>
         
     </head>
 <body>
-    <p>
-        <br />
-    </p>
-    <div class="auto-style1">
-    This demo
-        will map every username into an actor in the cluster.<br />
-        After login, a page with all the actors currently in the cluster will be shown<br />
-        and their status will be dinamically updated</div>
-    <p>
-        &nbsp;</p>
-    <div class="text-center">
-        <span class="auto-style3">Enter your username: </span> <input type="text" id="curUser" value="Mickey" class="auto-style3">
-        <br class="auto-style2" />
-        <br />
-        <br />
-        <!--<ul id="servermsglist">test </ul> -->
+   <p>
+      <br />
+   </p>
+   <div class="auto-style1">
+      This demo
+      will show every logged user on a map.<br />
+      Users can see each other on the map as they move, in real time.<br />
+      Future versions will show more user information<br />
+      and allow some user interaction (images, links, chat, etc.)
+   </div>
+   <p>
+      &nbsp;
+   </p>
+   <!--
+      <div>
+         User name: <input type="text" id="curUser" value="User1" class="auto-style3">
+      </div>
+      <div>
+         Starting location: <input type="text" id="curLocation" value="Lugano" class="auto-style3">
+      </div>
+      -->
 
-    </div>
+   <form role="form" class="col-md-2 col-md-offset-5">
+      <div class="form-group">
+         <label for="curUser">User name:</label>
+         <input type="text" class="form-control" id="curUser">
+      </div>
+      <div class="form-group">
+         <label for="curLocation">Starting location:</label>
+         <input type="text" class="form-control" id="curLocation">
+      </div>
+      <div class="my_submit_button">
+         <button type="submit" class="btn btn-default center-block" id="loginbutton">Submit</button>
+      </div>
+   </form>
 
-<p align="center">
-    <button id="loginbutton">Login</button>
-</p>
+   <!--
+      <br class="auto-style2" />
+      <br />
+      <br />
 
 
-<p id="demo"></p>
+      <!--<ul id="servermsglist">test </ul> 
 
-<script> 
-   $(function () {  
-      $('#loginbutton').click(function () {
-         var username = document.getElementById("curUser").value;
-         var urladd = "http://" + window.location.host + API_OFFSET + username;
-         jQuery.get(urladd, function (data) {
-            var get_result = "from webapi: " + data + "\n";
-         });
-         var users_params = username.split(" ");
-         if ((users_params.length > 1) && (users_params[0] == "kill"))
-            sessionStorage.setItem("username", "");
-         else 
-            sessionStorage.setItem("username", username);
-         window.location.href = "http://" + window.location.host + "/users.html";
+
+   <p align="center">
+      <button id="loginbutton">Login</button>
+   </p>
+      -->
+
+
+   <p id="demo"></p>
+
+   <script>
+      $(function () {
+         $('#loginbutton').click(function () {
+            var username = document.getElementById("curUser").value;
+            var urladd = "http://" + window.location.host + API_OFFSET + username;
+            jQuery.get(urladd, function (data) {
+               var get_result = "from webapi: " + data + "\n";
+            });
+            var users_params = username.split(" ");
+            if ((users_params.length > 1) && (users_params[0] == "kill"))
+               sessionStorage.setItem("username", "");
+            else
+               sessionStorage.setItem("username", username);
+            window.location.href = "http://" + window.location.host + "/users.html";
+         })
       })
-   })
 
-   
-</script>
+
+   </script>
 </body>
 </html>
