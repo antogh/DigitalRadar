@@ -31,10 +31,9 @@
       <br />
    </p>
    <div class="auto-style1">
-      This demo
-      will show every logged user on a map.<br />
+      This demo will show the position of every logged user on a map.<br />
       Users can see each other on the map as they move, in real time.<br />
-      Future versions will show more user information<br />
+      Future versions will also show more user information<br />
       and allow some user interaction (images, links, chat, etc.)
    </div>
    <p>
@@ -58,25 +57,23 @@
          <label for="curLocation">Starting location:</label>
          <input type="text" class="form-control" id="curLocation">
       </div>
-      <div class="my_submit_button">
-         <button type="submit" class="btn btn-default center-block" id="loginbutton">Submit</button>
+      <div class="my_submit_button text-center">
+         <a class="btn btn-default btn-primary" id="loginbutton">Submit</a>
       </div>
    </form>
 
-   <!--
       <br class="auto-style2" />
       <br />
       <br />
 
 
-      <!--<ul id="servermsglist">test </ul> 
+      <!--<ul id="servermsglist">test </ul> -->
 
-
+   <!--
    <p align="center">
       <button id="loginbutton">Login</button>
    </p>
-      -->
-
+   -->
 
    <p id="demo"></p>
 
@@ -84,6 +81,7 @@
       $(function () {
          $('#loginbutton').click(function () {
             var username = document.getElementById("curUser").value;
+            var start_location = document.getElementById("curLocation").value;
             var urladd = "http://" + window.location.host + API_OFFSET + username;
             jQuery.get(urladd, function (data) {
                var get_result = "from webapi: " + data + "\n";
@@ -93,7 +91,8 @@
                sessionStorage.setItem("username", "");
             else
                sessionStorage.setItem("username", username);
-            window.location.href = "http://" + window.location.host + "/users.html";
+            sessionStorage.setItem("location", start_location);
+            window.location.href = "http://" + window.location.host + "/UsersMap.html";
          })
       })
 

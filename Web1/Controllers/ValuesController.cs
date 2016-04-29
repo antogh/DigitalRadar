@@ -20,9 +20,9 @@ using System.Text;
 
 namespace Web1.Controllers {
 
-   class WebSocketData {
+   class WebSocketDataKpress {
 
-      public WebSocketData(string pname, int pseconds, int pkey, string paddress) {
+      public WebSocketDataKpress(string pname, int pseconds, int pkey, string paddress) {
          user_name = pname;
          life_in_seconds = pseconds;
          key_pressed = pkey;
@@ -35,6 +35,24 @@ namespace Web1.Controllers {
       public int key_pressed;
       public string node_address;   
    }
+
+
+   class WebSocketDataUsrMove {
+
+      public WebSocketDataUsrMove(string pname, double plat, double plng, string paddress) {
+         user_name = pname;
+         lat = plat;
+         lng = plng;
+         node_address = paddress;
+      }
+
+
+      public string user_name;
+      public double lat, lng;
+      public string node_address;
+   }
+
+
 
    [Route("api/[controller]")]
    public class ValuesController : Controller {
@@ -54,14 +72,33 @@ namespace Web1.Controllers {
       
 
       // GET api/values/name/seconds/key_pressed
-      // broadcast the message
+      // broadcast the keypress message
       [HttpGet("{name}/{seconds}/{key_pressed}")]
       public bool Get(string name, int seconds, int key_pressed) {
          foreach (WebSocket cur_ws in _ws_collection.Values) {
             if (cur_ws.State == WebSocketState.Open) {
                var token = CancellationToken.None;
                JavaScriptSerializer jser = new JavaScriptSerializer();
-               var wsdata = new WebSocketData(name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+               var wsdata = new WebSocketDataKpress(name, seconds, key_pressed, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
+               var type = WebSocketMessageType.Text;
+               string message = jser.Serialize(wsdata);
+               var data = Encoding.UTF8.GetBytes(message);
+               var buffer = new ArraySegment<Byte>(data);
+               cur_ws.SendAsync(buffer, type, true, token);
+            }
+         }
+         return true;
+      }
+
+      // GET api/values/name/seconds/key_pressed
+      // broadcast the position message
+      [HttpGet(common_const.BCAST_POS_KWD + "/{name}/{lat}/{lng}")]
+      public bool Get(string name, double lat, double lng) {
+         foreach (WebSocket cur_ws in _ws_collection.Values) {
+            if (cur_ws.State == WebSocketState.Open) {
+               var token = CancellationToken.None;
+               JavaScriptSerializer jser = new JavaScriptSerializer();
+               var wsdata = new WebSocketDataUsrMove(name, lat, lng, FabricRuntime.GetNodeContext().IPAddressOrFQDN);
                var type = WebSocketMessageType.Text;
                string message = jser.Serialize(wsdata);
                var data = Encoding.UTF8.GetBytes(message);
@@ -75,11 +112,11 @@ namespace Web1.Controllers {
 
       // GET api/values/name/key_pressed
       // exec a key press action on the actor
-      [HttpGet("keyPressed/{username}/{key_pressed}/{anti_cache}")]
-      public string Get(string username, int key_pressed, string anti_cache) { 
+      [HttpGet("userMoved/{username}/{lat}/{lng}/{anti_cache}")]
+      public string Get(string username, double lat, double lng, string anti_cache) { 
          ActorId act_id = new ActorId(username);
          IUserActor current_actor = ActorProxy.Create<IUserActor>(act_id, "UserActorProject", "UserActorService");
-         current_actor.ExecKeyPress(key_pressed);
+         current_actor.ExecUserMove(lat, lng);
          return "executed on " + FabricRuntime.GetNodeContext().IPAddressOrFQDN;
       }
 

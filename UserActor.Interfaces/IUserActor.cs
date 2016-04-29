@@ -17,6 +17,7 @@ namespace UserActor.Interfaces {
       //Task<int> TestMyActor(int num);
       Task KillUser();
       Task ExecKeyPress(int key_pressed);
+      Task ExecUserMove(double lat, double lng);
       Task<bool> InitUserActor(int frontend_port);
    }
 }

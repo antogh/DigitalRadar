@@ -3,6 +3,7 @@
 <head>
    <title>Simple Map</title>
    <script src="Scripts/Constants.js"></script>
+   <script src="Scripts/jquery-1.6.4.min.js"></script>
    <meta name="viewport" content="initial-scale=1.0">
    <meta charset="utf-8">
    <style>
@@ -29,15 +30,57 @@
       var inputDistance;
       var logged_user;
       var usersList;
-      //var login_userid = sessionStorage.getItem("username");
-      //var login_location = sessionStorage.getItem("location");
-      var login_userid = "User1";
-      var login_location = "Milano";
+      var login_userid = sessionStorage.getItem("username");
+      var login_location = sessionStorage.getItem("location");
+      //var login_userid = "User1";
+      //var login_location = "Milano";
+
+      function initWebSocket() {
+         websocket = new WebSocket("ws://" + window.location.host + "/data/");
+
+         websocket.onopen = function () {
+            get_result = "opened";
+         };
+         websocket.onmessage = function (args) {
+            get_result = "received message";
+            var params = JSON.parse(args.data);
+            action_on_received_message(params.user_name, params.lat, params.lng, params.node_address);
+         };
+         websocket.onclose = function (args) {
+            setTimeout(initWebSocket, 500);
+         };
+         websocket.onerror = function (error) {
+            websocket.close();
+         }
+
+      }
+
+
+      function action_on_received_message(username, plat, plng, cur_node) {
+         var user_found = false;
+         var new_coord = new google.maps.LatLng({ lat: plat, lng: plng });
+         if (username == logged_user.userID)
+            return;
+         for (var ndx=0; ndx < usersList.length; ndx++)
+            if (usersList[ndx].userID == username) {
+               user_found = true;
+               google.maps.event.trigger(map, 'new_position', usersList[ndx], new_coord);
+            }
+         if (user_found)
+            return;
+         var infowindow = openInfoWindow(username, new_coord);
+         var new_user = { userID: username, infowin: infowindow }
+         usersList.push(new_user);
+      }
+
+
+      initWebSocket();
+
 
       document.addEventListener("keydown", function (e) {
          var movepos = [KEYCODE_LEFT, KEYCODE_RIGHT, KEYCODE_UP, KEYCODE_DOWN];
          var jmpsize = [KEYCODE_PGUP, KEYCODE_PGDN];
-         if (movepos.indexOf(e.keyCode) > -1)
+         if (movepos.indexOf(e.keyCode) > -1) 
             JumpPosition(e.keyCode);
          if (jmpsize.indexOf(e.keyCode) > -1)
             setJumpSize(e.keyCode);
@@ -65,8 +108,11 @@
             new_lng += jumpMeters / 1000 * LNG_DEG_TO_KM / cosDegrees(new_lat);
          else if (keyCode == KEYCODE_LEFT)
             new_lng -= jumpMeters / 1000 * LNG_DEG_TO_KM / cosDegrees(new_lat);
-         var new_coord = new google.maps.LatLng({ lat: new_lat, lng: new_lng }); 
+         else
+            return;  // keycode not recognized
+         var new_coord = new google.maps.LatLng({ lat: new_lat, lng: new_lng });
          google.maps.event.trigger(map, 'new_position', logged_user, new_coord);
+         signalPosToServer(logged_user);
       }
 
 
@@ -182,6 +228,25 @@
       }
 
 
+      function signalPosToServer(cur_user) {
+         var urladd = "http://" + window.location.host + API_OFFSET + "userMoved/" + cur_user.userID + '/' + cur_user.infowin.getPosition().lat() + '/' + cur_user.infowin.getPosition().lng() + '/' + $.now();
+         jQuery.get(urladd, function (data) {
+            get_result = data;
+            //$('#curNode').html(data);
+         });
+      }
+
+
+      function refreshAllInfowinPosition() {
+         for (var ndx = 0; ndx < usersList.length; ndx++)
+            if (usersList[ndx].infowin.getMap() != null) {
+               var cur_coord = usersList[ndx].infowin.getPosition();
+               usersList[ndx].infowin.setPosition(cur_coord);
+            }
+      }
+
+
+
       function initMap() {
          var center_coord = new google.maps.LatLng({ lat: 46.0036778, lng: 8.951052 }); // default on Lugano, CH
          var geocoder = new google.maps.Geocoder();
@@ -197,15 +262,21 @@
                mapTypeControl: false,
                zoom: 8
             });
-            var infowindow = openInfoWindow(login_userid, center_coord);
+            var infowindow = openInfoWindow("<div style=\"color: blue; font-weight:bold\">" + login_userid + "\n(YOU)" + "</div>", center_coord);
             logged_user = { userID: login_userid, infowin: infowindow }
             usersList = [logged_user];
+            signalPosToServer(logged_user);
             map.addListener('new_position', function (cur_user, new_coord) {
                if (cur_user.infowin.getMap() == null)   // if infowin has been closed reopen it
                   cur_user.infowin = openInfoWindow(cur_user.userID, new_coord);
                else
                   cur_user.infowin.setPosition(new_coord);
             });
+            /*
+            map.addListener('zoom_changed', function () {
+               window.setTimeout(refreshAllInfowinPosition(), 3000);
+            });
+            */
             SetupControlPanel();
          });
       }
