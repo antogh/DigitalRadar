@@ -15,6 +15,6 @@
                                     StoreLocation="CurrentUser"
                                     StoreName="My" />
   -->
-  <ClusterConnectionParameters ConnectionEndpoint="party50677.westus.cloudapp.azure.com:19000" />
+  <ClusterConnectionParameters ConnectionEndpoint="party2885.westus.cloudapp.azure.com:19000" />
   <ApplicationParameterFile Path="..\ApplicationParameters\Cloud.xml" />
 </PublishProfile>

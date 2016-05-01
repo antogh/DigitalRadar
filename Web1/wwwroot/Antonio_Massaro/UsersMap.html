@@ -2,8 +2,8 @@
 <html>
 <head>
    <title>Simple Map</title>
-   <script src="Scripts/Constants.js"></script>
-   <script src="Scripts/jquery-1.6.4.min.js"></script>
+   <script src="../Scripts/Constants.js"></script>
+   <script src="../Scripts/jquery-1.6.4.min.js"></script>
    <meta name="viewport" content="initial-scale=1.0">
    <meta charset="utf-8">
    <style>
@@ -20,6 +20,10 @@
       .gm-style-iw + div {
          display: none;
       }
+
+      .no_dbl_tap  {
+         touch-action: none;
+      }
    </style>
 </head>
 <body>
@@ -33,7 +37,7 @@
       var login_userid = sessionStorage.getItem("username");
       var login_location = sessionStorage.getItem("location");
       //var login_userid = "User1";
-      //var login_location = "Milano";
+      //var login_location = "Seattle";
 
       function initWebSocket() {
          websocket = new WebSocket("ws://" + window.location.host + "/data/");
@@ -142,6 +146,7 @@
          leftBtn.style.display = 'inline-block';
          leftBtn.style.width = '55px';
          leftBtn.style.height = '50px';
+         leftBtn.style.touchAction = 'none';
          // Set CSS for the control interior.
          var leftBtnText = document.createElement('div');
          leftBtnText.style.color = 'rgb(25,25,25)';
