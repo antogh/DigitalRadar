@@ -170,7 +170,7 @@
     },
     "Microsoft.ServiceFabric.Data/1.4.87-preview": {
       "type": "package",
-      "sha512": "oSlKiWqV9hRbD2VrE3ZFMUhfGlYsgWKXVd/Rue1McEH8cVU9Qk9vkWE/T40cZyuOiECJGObKPpXX5MeenJMIrQ==",
+      "sha512": "vMlboK8H0w4s1hIfEaH195p9JmV5j1wPkJ8c/Kqvfd8qXwJQyWcmk6UXVLzomOLf5Xhf2WV31V3gd0c/KPCpJQ==",
       "files": [
         "lib/net45/Microsoft.ServiceFabric.Data.dll",
         "lib/net45/Microsoft.ServiceFabric.Data.xml",

@@ -111,7 +111,7 @@ namespace Web1.Controllers {
 
 
       // GET api/values/name/key_pressed
-      // exec a key press action on the actor
+      // exec a move position action on the actor
       [HttpGet("userMoved/{username}/{lat}/{lng}/{anti_cache}")]
       public string Get(string username, double lat, double lng, string anti_cache) { 
          ActorId act_id = new ActorId(username);

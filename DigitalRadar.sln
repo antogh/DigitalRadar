@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "DemoActors", "DemoActors\DemoActors.sfproj", "{0A6C7C0C-E5D5-4143-894F-A7A49F73DB59}"
+Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "Web1Project", "Web1Project\Web1Project.sfproj", "{0A6C7C0C-E5D5-4143-894F-A7A49F73DB59}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Web1", "Web1\Web1.xproj", "{824F5EB8-69B3-437E-988B-BAA43213C50B}"
 EndProject
