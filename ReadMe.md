@@ -7,6 +7,10 @@ Before you read the rest of this document you can quickly view the application i
 
 [![IMAGE ALT TEXT](http://i.imgur.com/4geD2py.png?1)](https://player.vimeo.com/video/166978620?autoplay=1)
 
+new features (12 of July 2016)
+[![IMAGE ALT TEXT](http://i.imgur.com/NoObGC5.png?1)](https://player.vimeo.com/video/174421099?autoplay=1)
+
+
 The purpose of this project is to "learn by doing" service fabric and possibly share my findings with other developers approaching the platform. The application at current stage is quite simple and that makes it good to be used as a sample. You can use this repo to have an example of : 
 
  - **ASP.NET core** stateless service as a front end for a SF solution
