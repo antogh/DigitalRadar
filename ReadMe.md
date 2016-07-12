@@ -8,6 +8,7 @@ Before you read the rest of this document you can quickly view the application i
 [![IMAGE ALT TEXT](http://i.imgur.com/4geD2py.png?1)](https://player.vimeo.com/video/166978620?autoplay=1)
 
 new features (12 of July 2016)
+
 [![IMAGE ALT TEXT](http://i.imgur.com/NoObGC5.png?1)](https://player.vimeo.com/video/174421099?autoplay=1)
 
 
